@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="email_template_pos_receipt_custom" model="mail.template">
+            <field name="name">POS: Custom Receipt Email</field>
+            <field name="model_id" ref="point_of_sale.model_pos_order"/>
+            <field name="subject">Je kasticket bij {{ object.config_id.company_id.name }}</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{ (object.partner_id.email or '') }}</field>
+            <field name="description">Custom receipt email sent to POS customers</field>
+            <field name="lang">{{ object.partner_id.lang or object.user_id.lang }}</field>
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px; font-size: 14px;">
+                    <t t-set="client_name" t-value="object.partner_id.name or ''"/>
+                    <t t-set="store_name" t-value="object.company_id.name or ''"/>
+                    <t t-set="tz" t-value="object.partner_id.tz or object.user_id.tz or 'Europe/Brussels'"/>
+                    <t t-set="lang" t-value="object.partner_id.lang or object.user_id.lang or 'nl_BE'"/>
+
+                    <p>
+                        <t t-if="client_name">
+                            Beste <t t-out="client_name"/>,
+                        </t>
+                        <t t-else="">
+                            Beste klant,
+                        </t>
+                    </p>
+                    <p>
+                        Bedankt voor je aankoop bij <t t-out="store_name"/>!
+                        In de bijlage vind je je kassabon voor de aankoop op
+                        <t t-out="object.date_order.astimezone(object.env['res.lang']._get_tz(tz)).strftime('%A %d %B')"/>
+                        om <t t-out="object.date_order.astimezone(object.env['res.lang']._get_tz(tz)).strftime('%H:%M')"/>.
+                    </p>
+                    <p>
+                        Met vriendelijke groeten,<br/>
+                        Team <t t-out="store_name"/>
+                    </p>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="df_pos_receipt_custom.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+
+        <!-- Custom header text: insert after ReceiptHeader -->
+        <xpath expr="//ReceiptHeader" position="after">
+            <div t-if="customHeaderText" class="pos-receipt-center-align text-center pt-2" style="white-space:pre-line">
+                <t t-esc="customHeaderText"/>
+            </div>
+        </xpath>
+
+        <!-- Conditionally show/hide tax details section -->
+        <xpath expr="//div[hasclass('pos-receipt-taxes')]" position="attributes">
+            <attribute name="t-if">showTaxDetails and taxTotals and taxTotals.has_tax_groups</attribute>
+        </xpath>
+
+        <!-- Conditionally show/hide QR code section -->
+        <xpath expr="//div[hasclass('gap-2') and @style='font-size: 75%;']" position="attributes">
+            <attribute name="t-if">showQrCode and order.company.point_of_sale_use_ticket_qr_code and order.finalized</attribute>
+        </xpath>
+
+        <!-- Conditionally show/hide POS config name -->
+        <xpath expr="//div[hasclass('pos-config-name')]" position="attributes">
+            <attribute name="t-if">showConfigName</attribute>
+        </xpath>
+
+        <!-- Conditionally show/hide company address -->
+        <xpath expr="//div[hasclass('pos-config-name')]/following-sibling::div[1]" position="attributes">
+            <attribute name="t-if">showCompanyAddress</attribute>
+        </xpath>
+
+        <!-- Conditionally show/hide VAT -->
+        <xpath expr="//div[@t-if='company.vat']" position="attributes">
+            <attribute name="t-if">showCompanyVat and company.vat</attribute>
+        </xpath>
+
+        <!-- Conditionally show/hide phone -->
+        <xpath expr="//div[@t-if='company.phone']" position="attributes">
+            <attribute name="t-if">showCompanyContact and company.phone</attribute>
+        </xpath>
+
+        <!-- Conditionally show/hide email -->
+        <xpath expr="//div[@t-if='company.email']" position="attributes">
+            <attribute name="t-if">showCompanyContact and company.email</attribute>
+        </xpath>
+
+        <!-- Conditionally show/hide website -->
+        <xpath expr="//div[@t-if='company.website']" position="attributes">
+            <attribute name="t-if">showCompanyContact and company.website</attribute>
+        </xpath>
+
+        <!-- Custom footer text: insert before the standard footer -->
+        <xpath expr="//div[@t-if='order.config.receipt_footer']" position="before">
+            <div t-if="customFooterText" class="pos-receipt-center-align text-center pt-3" style="white-space:pre-line">
+                <t t-esc="customFooterText"/>
+            </div>
+        </xpath>
+
+    </t>
+
+    <!-- ReceiptHeader: conditionally show/hide cashier -->
+    <t t-name="df_pos_receipt_custom.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('cashier')]" position="attributes">
+            <attribute name="t-if">showCashier and order?.getCashierName()</attribute>
+        </xpath>
+    </t>
+</templates>

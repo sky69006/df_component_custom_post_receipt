@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="pos_receipt_template_view_tree" model="ir.ui.view">
+        <field name="name">pos.receipt.template.tree</field>
+        <field name="model">pos.receipt.template</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="show_config_name"/>
+                <field name="show_cashier"/>
+                <field name="show_tax_details"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="pos_receipt_template_view_form" model="ir.ui.view">
+        <field name="name">pos.receipt.template.form</field>
+        <field name="model">pos.receipt.template</field>
+        <field name="arch" type="xml">
+            <form string="Receipt Template">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Standard Receipt"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Header &amp; Footer">
+                            <field name="header_text"/>
+                            <field name="footer_text"/>
+                        </group>
+                        <group string="Display Options">
+                            <field name="show_config_name"/>
+                            <field name="show_cashier"/>
+                            <field name="show_company_address"/>
+                            <field name="show_company_vat"/>
+                            <field name="show_company_contact"/>
+                            <field name="show_tax_details"/>
+                            <field name="show_qr_code"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="pos_receipt_template_action" model="ir.actions.act_window">
+        <field name="name">Receipt Templates</field>
+        <field name="res_model">pos.receipt.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first receipt template
+            </p>
+            <p>
+                Define custom receipt templates with multi-language support.
+                Configure which elements to show or hide on receipts.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item under POS Configuration -->
+    <menuitem id="pos_receipt_template_menu"
+              name="Receipt Templates"
+              parent="point_of_sale.menu_point_config_product"
+              action="pos_receipt_template_action"
+              sequence="40"/>
+</odoo>
